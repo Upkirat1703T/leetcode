@@ -33,21 +33,27 @@ A better approach is to keep track of the most recent index where every number a
 
 ## 3. Code
 
-```cpp
+```java
+import java.util.HashSet;
+import java.util.Set;
+
 class Solution {
-public:
-    bool containsNearbyDuplicate(vector<int>& nums, int k) {
-        unordered_map<int, int> mp;
-
-        for (int i = 0; i < nums.size(); i++) {
-            if (mp.count(nums[i])) {
-                if (i - mp[nums[i]] <= k)
-                    return true;
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        Set<Integer> set = new HashSet<>();
+        
+        for (int i = 0; i < nums.length; i++) {
+            // Remove the element that is now outside the window
+            if (i > k) {
+                set.remove(nums[i - k - 1]);
             }
-            mp[nums[i]] = i;
+            
+            // Try to add the current element. If it fails, a duplicate exists.
+            if (!set.add(nums[i])) {
+                return true;
+            }
         }
-
+        
         return false;
     }
-};
+}
 ```
