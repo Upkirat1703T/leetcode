@@ -1,32 +1,53 @@
-<h2><a href="https://leetcode.com/problems/contains-duplicate-ii">Contains Duplicate II</a></h2> <img src='https://img.shields.io/badge/Difficulty-Easy-brightgreen' alt='Difficulty: Easy' /><hr><p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <code>true</code> <em>if there are two <strong>distinct indices</strong> </em><code>i</code><em> and </em><code>j</code><em> in the array such that </em><code>nums[i] == nums[j]</code><em> and </em><code>abs(i - j) &lt;= k</code>.</p>
+# LeetCode 219 - Contains Duplicate II
 
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
+## 1. Intuition
 
-<pre>
-<strong>Input:</strong> nums = [1,2,3,1], k = 3
-<strong>Output:</strong> true
-</pre>
+The problem asks whether there exist two equal elements such that the absolute difference between their indices is at most `k`.
 
-<p><strong class="example">Example 2:</strong></p>
+A brute-force solution would compare every pair of elements, resulting in **O(n²)** time complexity.
 
-<pre>
-<strong>Input:</strong> nums = [1,0,1,1], k = 1
-<strong>Output:</strong> true
-</pre>
+A better approach is to keep track of the most recent index where every number appeared. Whenever we encounter the same number again, we simply check if the distance between the current index and its previous occurrence is less than or equal to `k`.
 
-<p><strong class="example">Example 3:</strong></p>
+---
 
-<pre>
-<strong>Input:</strong> nums = [1,2,3,1,2,3], k = 2
-<strong>Output:</strong> false
-</pre>
+## 2. Approach
 
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
+1. Create a hash map to store the last index of every element.
+2. Traverse the array from left to right.
+3. For every element:
+   - If it already exists in the map:
+     - Calculate the distance between the current index and the previous index.
+     - If the distance is less than or equal to `k`, return `true`.
+   - Update the current index in the map.
+4. If no valid pair is found, return `false`.
 
-<ul>
-	<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
-	<li><code>0 &lt;= k &lt;= 10<sup>5</sup></code></li>
-</ul>
+### Time Complexity
+
+**O(n)**
+
+### Space Complexity
+
+**O(n)**
+
+---
+
+## 3. Code
+
+```cpp
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_map<int, int> mp;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (mp.count(nums[i])) {
+                if (i - mp[nums[i]] <= k)
+                    return true;
+            }
+            mp[nums[i]] = i;
+        }
+
+        return false;
+    }
+};
+```
